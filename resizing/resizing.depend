@@ -11,3 +11,27 @@
 	<list>
 	<stdlib.h>
 
+1513198064 source:e:\workformoney\resizing\main.cpp
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"opencv2/opencv.hpp"
+	<iostream>
+	<vector>
+	<math.h>
+	<tuple>
+	<algorithm>
+	<list>
+	<stdlib.h>
+
+1513214412 source:c:\users\texsm\documents\seam carving\seam_carving\resizing\main.cpp
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"opencv2/opencv.hpp"
+	<iostream>
+	<vector>
+	<math.h>
+	<tuple>
+	<algorithm>
+	<list>
+	<stdlib.h>
+
