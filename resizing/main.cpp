@@ -103,7 +103,6 @@ public:
     void mostrar();
     void mostrar_final(int x, int y);
     void update();
-    void save();
     void redimensionar(int x, int y, int num_batch_x, int num_batch_y);
     Mat mostrar_copia();
     ~Imagen(){}
@@ -169,6 +168,7 @@ void Imagen::redimensionar(int x, int y, int num_batch_x, int num_batch_y){
             caminos = caminos_minimos_horizontales(dif_y);
         else
             caminos = caminos_minimos_horizontales(tam_batch_y);
+
         duplicar_caminos_horizontales(caminos);
         clear_marcas();
         update();
@@ -186,6 +186,7 @@ void Imagen::redimensionar(int x, int y, int num_batch_x, int num_batch_y){
         caminos = caminos_minimos_verticales(dif_x);
         else
             caminos = caminos_minimos_verticales(tam_batch_x);
+
         duplicar_caminos_verticales(caminos);
         clear_marcas();
         update();
@@ -221,13 +222,10 @@ void Imagen::mostrar_final(int x, int y){
     waitKey(0);
 }
 
-void Imagen::save(){
-    imwrite(nombre+"_final.jpg", mat);
-}
 
 void Imagen::update(){
     energias = vector<vector<int>>(mat.rows, vector<int>(mat.cols, 0));
-    caminos = energias;
+    caminos = vector<vector<int>>(mat.rows, vector<int>(mat.cols, 0));
 }
 
 void Imagen::calcular_matriz_energias(){
@@ -377,9 +375,9 @@ void Imagen::duplicar_caminos_verticales(vector<Camino*>& caminos){
         auto cant = v_cantidades[i]->begin();
         for(int j = 0; j < mat.cols; j++){
             new_row[j + cont] = row[j];
-            if(j == *pos){
+            if(j == *pos && pos != v_posiciones[i]->end()){
                 for(int k = 0; k < *cant; k++){
-                    // new_row[j + cont + k + 1] = row[j];
+
                     if(i == 0)
                         new_row[j + cont + k + 1] = promedio2(row[j], row_next[j]);
                     else if(i == mat.rows - 1)
@@ -415,7 +413,6 @@ void Imagen::duplicar_caminos_horizontales(vector<Camino*>& caminos){
         }
         cout<<endl;
     };
-
     vector< list<int>* > v_posiciones(mat.cols, nullptr);
     vector< list<int>* > v_cantidades(mat.cols, nullptr);
 
@@ -459,13 +456,15 @@ void Imagen::duplicar_caminos_horizontales(vector<Camino*>& caminos){
         auto pos = v_posiciones[i]->begin();
         auto cant = v_cantidades[i]->begin();
         for(int j = 0; j < mat.rows; j++){
+
             new_mat.at<Pixel>(j + cont, i) = mat.at<Pixel>(j, i);
-            if(j == *pos){
+
+            if(j == *pos && pos != v_posiciones[i]->end()){
                 for(int k = 0; k < *cant; k++){
-                    // new_row[j + cont + k + 1] = row[j];
+
                     if(i == 0)
                         new_mat.at<Pixel>(j + cont + k + 1, i) = promedio2(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i + 1));
-                    else if(i == mat.rows - 1)
+                    else if(i == mat.cols - 1)
                         new_mat.at<Pixel>(j + cont + k + 1, i) = promedio2(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1));
                     else
                         new_mat.at<Pixel>(j + cont + k + 1, i) = promedio1(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1), mat.at<Pixel>(j, i));
@@ -474,6 +473,7 @@ void Imagen::duplicar_caminos_horizontales(vector<Camino*>& caminos){
                 pos++;
                 cant++;
             }
+
         }
     }
     mat = new_mat;
@@ -618,6 +618,9 @@ int main( int argc, char** argv )
     cout<<"7.- bicicleta"<<endl;
     cout<<"8.- capitan america"<<endl;
     cout<<"9.- avion"<<endl;
+    cout<<"10.- turistas"<<endl;
+    cout<<"11.- familia"<<endl;
+    cout<<"12.- bote"<<endl;
     string path = "imagenes/";
 
     cin>>opcion_imagen;
@@ -640,6 +643,12 @@ int main( int argc, char** argv )
         break;
         case 9: nombre_imagen = path + "avion.jpg";
         break;
+        case 10: nombre_imagen = path + "turistas.jpg";
+        break;
+        case 11: nombre_imagen = path + "familia.jpg";
+        break;
+        case 12: nombre_imagen = path + "bote.jpg";
+        break;
         default: cout << "Usted ha ingresado una opcion incorrecta";
     }
 
@@ -659,8 +668,6 @@ int main( int argc, char** argv )
 
     img.redimensionar(x, y, batch, batch);
 
-    img.save();
-    img.mostrar();
-    waitKey(0);
+
     return 0;
 }
