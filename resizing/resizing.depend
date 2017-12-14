@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1513193471 source:c:\users\texsm\desktop\new folder\resizing\main.cpp
+	<opencv2/core/core.hpp>
+	<opencv2/highgui/highgui.hpp>
+	"opencv2/opencv.hpp"
+	<iostream>
+	<vector>
+	<math.h>
+	<tuple>
+	<algorithm>
+	<list>
+	<stdlib.h>
+
