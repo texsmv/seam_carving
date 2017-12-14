@@ -23,11 +23,11 @@ int distancia_pixeles(Pixel& p1, Pixel& p2){
     return fabs(p1[0] - p2[0]) + fabs(p1[1] - p2[1]) + fabs(p1[2] - p2[2]);
 }
 
-Pixel promedio1(Pixel a, Pixel b, Pixel c){
+Pixel promedio_tres(Pixel a, Pixel b, Pixel c){
     return Pixel((a[0] + b[0] + c[0])/3, (a[1] + b[1] + c[1])/3, (a[2] + b[2] + c[2])/3);
 }
 
-Pixel promedio2(Pixel a, Pixel b){
+Pixel promedio_dos(Pixel a, Pixel b){
     return Pixel((a[0] + b[0])/2, (a[1] + b[1])/2, (a[2] + b[2])/2);
 }
 
@@ -104,7 +104,7 @@ public:
     void mostrar_final(int x, int y);
     void update();
     void redimensionar(int x, int y, int num_batch_x, int num_batch_y);
-    Mat mostrar_copia();
+
     ~Imagen(){}
 
     Mat mat;
@@ -353,10 +353,6 @@ void Imagen::duplicar_caminos_verticales(vector<Camino*>& caminos){
         v_posiciones[i] = posiciones_nr;
         v_cantidades[i] = cantidades;
 
-        // imprimir(v_posiciones[i]);
-        // imprimir(v_cantidades[i]);
-        // cout<<endl;
-        // waitKey(0);
     }
 
     Mat new_mat(mat.rows, mat.cols + caminos.size(), CV_8UC3);
@@ -379,11 +375,11 @@ void Imagen::duplicar_caminos_verticales(vector<Camino*>& caminos){
                 for(int k = 0; k < *cant; k++){
 
                     if(i == 0)
-                        new_row[j + cont + k + 1] = promedio2(row[j], row_next[j]);
+                        new_row[j + cont + k + 1] = promedio_dos(row[j], row_next[j]);
                     else if(i == mat.rows - 1)
-                        new_row[j + cont + k + 1] = promedio2(row[j], row_last[j]);
+                        new_row[j + cont + k + 1] = promedio_dos(row[j], row_last[j]);
                     else
-                        new_row[j + cont + k + 1] = promedio1(row[j], row_last[j], row_next[j]);
+                        new_row[j + cont + k + 1] = promedio_tres(row[j], row_last[j], row_next[j]);
                 }
             cont += *cant;
             pos++;
@@ -463,11 +459,11 @@ void Imagen::duplicar_caminos_horizontales(vector<Camino*>& caminos){
                 for(int k = 0; k < *cant; k++){
 
                     if(i == 0)
-                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio2(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i + 1));
+                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio_dos(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i + 1));
                     else if(i == mat.cols - 1)
-                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio2(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1));
+                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio_dos(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1));
                     else
-                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio1(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1), mat.at<Pixel>(j, i));
+                        new_mat.at<Pixel>(j + cont + k + 1, i) = promedio_tres(mat.at<Pixel>(j, i), mat.at<Pixel>(j, i - 1), mat.at<Pixel>(j, i));
                 }
                 cont += *cant;
                 pos++;
@@ -605,6 +601,7 @@ void Imagen::colorear_camino_minimo_horizontal(Camino* c_min){
 
 int main( int argc, char** argv )
 {
+
     cout<<"SEAM CARVING"<<endl;
     string nombre_imagen;
     int opcion_imagen = 0;
